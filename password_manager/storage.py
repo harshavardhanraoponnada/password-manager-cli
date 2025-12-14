@@ -2,6 +2,18 @@ import json
 import os
 
 VAULT_PATH = "data/vault.json"
+SALT_PATH = "data/salt.bin"
+
+
+def get_salt():
+    if not os.path.exists(SALT_PATH):
+        salt = os.urandom(16)
+        with open(SALT_PATH, "wb") as f:
+            f.write(salt)
+        return salt
+
+    with open(SALT_PATH, "rb") as f:
+        return f.read()
 
 
 def load_vault():
