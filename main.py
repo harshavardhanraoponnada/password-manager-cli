@@ -1,10 +1,12 @@
-from password_manager.manager import add_password, view_passwords
+from password_manager.manager import authenticate, add_password, view_passwords
 
 
 def main():
+    print("=== Password Manager CLI ===")
+    authenticate()
+
     while True:
-        print("\n=== Password Manager CLI ===")
-        print("1. Add Password")
+        print("\n1. Add Password")
         print("2. View Passwords")
         print("3. Exit")
 
@@ -18,7 +20,7 @@ def main():
             print("Exiting...")
             break
         else:
-            print("Invalid choice. Try again.")
+            print("Invalid choice.")
 
 
 if __name__ == "__main__":

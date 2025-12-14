@@ -1,4 +1,15 @@
-from password_manager.storage import load_vault, save_vault
+from password_manager.storage import load_vault, save_vault, get_salt
+from password_manager.utils import generate_key, encrypt_data, decrypt_data
+
+MASTER_KEY = None
+
+
+def authenticate():
+    global MASTER_KEY
+    master_password = input("Enter master password: ").strip()
+
+    salt = get_salt()
+    MASTER_KEY = generate_key(master_password, salt)
 
 
 def add_password():
@@ -7,14 +18,15 @@ def add_password():
     password = input("Password: ").strip()
 
     if not service or not username or not password:
-        print("\nAll fields are required.")
+        print("All fields are required.")
         return
 
-    vault = load_vault()
+    encrypted_pwd = encrypt_data(password, MASTER_KEY)
 
+    vault = load_vault()
     vault[service] = {
         "username": username,
-        "password": password
+        "password": encrypted_pwd
     }
 
     save_vault(vault)
@@ -30,4 +42,5 @@ def view_passwords():
 
     print("\nStored credentials:")
     for service, creds in vault.items():
-        print(f"- {service} | {creds['username']} | {creds['password']}")
+        decrypted_pwd = decrypt_data(creds["password"], MASTER_KEY)
+        print(f"- {service} | {creds['username']} | {decrypted_pwd}")
