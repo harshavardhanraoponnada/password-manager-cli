@@ -1,4 +1,4 @@
-from password_manager.manager import authenticate, add_password, view_passwords
+from password_manager.manager import authenticate, add_password, view_passwords, search_password
 
 
 def main():
@@ -8,7 +8,8 @@ def main():
     while True:
         print("\n1. Add Password")
         print("2. View Passwords")
-        print("3. Exit")
+        print("3. Search Password")
+        print("4. Exit")
 
         choice = input("Enter your choice: ").strip()
 
