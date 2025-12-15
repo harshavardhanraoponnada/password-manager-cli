@@ -13,5 +13,11 @@ A simple and secure command-line password manager built using Python.
 - Python 3
 - cryptography library
 
+## Security
+- Uses a master password for authentication
+- Passwords are encrypted using Fernet (AES-based)
+- Encryption key is derived using PBKDF2 with salt
+- Master password is never stored
+
 ## Project Status
 🚧 In progress
