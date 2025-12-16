@@ -1,5 +1,5 @@
 from password_manager.storage import load_vault, save_vault, get_salt
-from password_manager.utils import generate_key, encrypt_data, decrypt_data
+from password_manager.utils import generate_key, encrypt_data, decrypt_data, check_password_strength
 
 MASTER_KEY = None
 
@@ -33,6 +33,9 @@ def add_password():
     if not service or not username or not password:
         print("All fields are required.")
         return
+    
+    strength = check_password_strength(password)
+    print(f"\nPassword strength: {strength}")
 
     encrypted_pwd = encrypt_data(password, MASTER_KEY)
 
@@ -43,7 +46,7 @@ def add_password():
     }
 
     save_vault(vault)
-    print(f"Password saved for {service}.")
+    print(f"\nPassword saved for {service}.")
 
 
 def view_passwords():
@@ -71,3 +74,54 @@ def search_password():
     decrypted_pwd = decrypt_data(creds["password"], MASTER_KEY)
     masked = "*" * len(decrypted_pwd)
     print(f"{service} | {creds['username']} | {masked}")
+
+def update_password():
+    service = input("Enter service name to update: ").strip()
+    vault = load_vault()
+
+    if service not in vault:
+        print("Service not found.")
+        return
+
+    new_password = input("Enter new password: ").strip()
+
+    strength = check_password_strength(new_password)
+    print(f"Password strength: {strength}")
+
+    encrypted_pwd = encrypt_data(new_password, MASTER_KEY)
+
+    vault[service]["password"] = encrypted_pwd
+    save_vault(vault)
+
+    print(f"Password updated for {service}.")
+
+def delete_password():
+    service = input("Enter service name to delete: ").strip()
+    vault = load_vault()
+
+    if service not in vault:
+        print("Service not found.")
+        return
+
+    del vault[service]
+    save_vault(vault)
+
+    print(f"Password deleted for {service}.")
+
+import csv
+
+def export_to_csv():
+    vault = load_vault()
+
+    if not vault:
+        print("No data to export.")
+        return
+
+    with open("passwords_export.csv", "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Service", "Username"])
+
+        for service, creds in vault.items():
+            writer.writerow([service, creds["username"]])
+
+    print("Passwords exported (without passwords).")
