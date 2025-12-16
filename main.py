@@ -21,7 +21,6 @@ def main():
             view_passwords()
         elif choice == "3":
             search_password()
-            break
         elif choice == "4":
             update_password()
         elif choice == "5":
