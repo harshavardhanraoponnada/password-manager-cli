@@ -19,5 +19,16 @@ A simple and secure command-line password manager built using Python.
 - Encryption key is derived using PBKDF2 with salt
 - Master password is never stored
 
+## Features Implemented
+- Secure master password authentication
+- Encrypted password storage
+- Add, view, search, update, and delete credentials
+- Password strength checking
+- Masked password display
+
+## Limitations
+- Local storage only
+- No cloud sync or recovery if vault is lost
+
 ## Project Status
 🚧 In progress
