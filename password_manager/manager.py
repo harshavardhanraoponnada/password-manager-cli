@@ -5,25 +5,21 @@ MASTER_KEY = None
 
 from cryptography.fernet import InvalidToken
 
-def authenticate():
+def authenticate(master_password):
     global MASTER_KEY
-    master_password = input("Enter master password: ").strip()
-
     salt = get_salt()
     key = generate_key(master_password, salt)
 
     vault = load_vault()
     if vault:
+        from cryptography.fernet import InvalidToken
         try:
             sample = next(iter(vault.values()))
             decrypt_data(sample["password"], key)
         except InvalidToken:
-            print("❌ Incorrect master password.")
-            exit(1)
+            raise Exception("Invalid master password")
 
     MASTER_KEY = key
-
-
 
 def add_password():
     service = input("Service name: ").strip()
